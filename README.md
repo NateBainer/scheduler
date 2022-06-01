@@ -14,7 +14,7 @@ Confirmation message before deleting an interview
 
 ## If you want to run the app locally
 1. Fork this repository, then clone your fork of this repository.
-2. Go to the [scheduler-api repository](https://github.com/jatanassian/scheduler-api) that contains the database and fork it, then clone your fork of this repository.
+2. Go to the [scheduler-api repository](https://github.com/NateBainer/scheduler-api) that contains the database and fork it, then clone your fork of this repository.
 3. Install dependencies in both folders (scheduler & shceduler-api) using the `npm install` command.
 4. Open two terminals, one for scheduler and the second for scheduler-api.
 5. Run the both servers using the `npm start` command.
