@@ -1,36 +1,45 @@
-// Use the state to return the appointments for a specific day
+//Go through an appointments object and return an array pf all the nested objects with that id
+const matchIds = (appointments, ids) => {
+  const matched = ids.map(id => appointments[id]);
+  return matched;
+}
+
+//Go through a state array with a days object and an appointments object
+//Match the appointments given in the days object to those in the appointments object
 function getAppointmentsForDay(state, day) {
-  const result = [];
-  const dayData = state.days.filter(d => d.name === day)
 
-  if (!dayData[0]) return result;
-  for (const a of dayData[0].appointments) {
-    result.push(state.appointments[a]);
-  }
+  let appointmentArr = [];
+  // eslint-disable-next-line
+  state.days.map(dayObject => {
+    if (dayObject.name === day) {
+      dayObject.appointments.forEach(apptId => appointmentArr.push(apptId))
+    }
+  })
+  return matchIds(state.appointments, appointmentArr);
+}
 
-  return result;
-};
-
-// Return the interviewers of a specific day
-function getInterviewersForDay(state, day) {
-  const result = [];
-  const dayData = state.days.filter(d => d.name === day)
-
-  if (!dayData[0]) return result;
-  for (const a of dayData[0].interviewers) {
-    result.push(state.interviewers[a]);
-  }
-  
-  return result;
-};
-
-// Add the info of the interviewer for an existing interview
 function getInterview(state, interview) {
-  if (interview) {
-    const interviewer = state.interviewers[interview.interviewer];
-    return { ...interview, interviewer };
+  if (!interview) {
+    return null;
   }
-  return null;
-};
 
-export { getAppointmentsForDay, getInterview, getInterviewersForDay };
+  const interviewerInfo = state.interviewers[interview.interviewer];
+  return {
+    student: interview.student,
+    interviewer: interviewerInfo
+  }
+}
+
+function getInterviewersForDay(state, day) {
+
+  let interviewersArr = [];
+  // eslint-disable-next-line
+  state.days.map(dayObject => {
+    if (dayObject.name === day) {
+      dayObject.interviewers.forEach(interviewerId => interviewersArr.push(interviewerId))
+    }
+  })
+  return matchIds(state.interviewers, interviewersArr);
+}
+
+module.exports = { matchIds, getAppointmentsForDay, getInterview, getInterviewersForDay };

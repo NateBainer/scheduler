@@ -1,50 +1,39 @@
+import { useState } from 'react';
+// take in an initial mode
+// set the mode state with the initial mode provided
+// return an object with a mode property
 
-   
-import { useState } from "react";
-
-/**
- * Keeps track of the current view mode of appointment as well as a history of modes
- * @param {*} initial 
- */
-const useVisualMode = initial => {
-  //Sets states
+const useVisualMode = (initial) => {
   const [mode, setMode] = useState(initial);
+  // eslint-disable-next-line
   const [history, setHistory] = useState([initial]);
 
-  /**
-   * Transitions to new mode, includes error handling
-   * @param {*} newMode 
-   * @param {*} error 
-   */
-  const transition = (newMode, error) => {
-
-    //If there is an error, places the new mode in the correct position
-    if (error) {
-      const newHistory = [...history];
-      newHistory.pop();
-      
-      setHistory(prevHistory => [...newHistory, newMode]);
-      setMode(newMode);
+  // allows to transition to a new mode
+  const transition = (newMode, replace = false) => {
+    if (replace) {
+      setMode((prev) => newMode)
+      let replaceHistory = [...history];
+      replaceHistory[replaceHistory.length - 1] = mode;
+      setHistory((prev) => replaceHistory);
     } else {
-      //Change history to a copy of the history with newMode at the end.
-      setHistory(prevHistory => [...prevHistory, newMode]);
-      //Asign mode to new mode
-      setMode(newMode);
+      setMode((prev) => newMode);
+      let newHistory = [...history];
+      newHistory.push(newMode);
+      setHistory((prev) => newHistory);
     }
   };
 
-  //**Reverst to previou mode in history */
+  // allows to call back to return to previous mode
   const back = () => {
-    //Checks if history has atleast two items
+     let newHistory = [...history];
+    newHistory.pop(mode);
+    setHistory((prev) => newHistory);
     if (history.length > 1) {
-      //sets mode too one behind the end element
-      setMode(history[history.length - 2]);
-      //sets history to a copy of history minus the end
-      setHistory(prevHistory => prevHistory.slice(0, prevHistory.length - 1));
+      setMode((prev) => newHistory[(newHistory.length - 1)]);
     }
   };
 
-  return { mode, transition, back };
-};
+  return { mode, transition, back }
+}
 
 export default useVisualMode;
